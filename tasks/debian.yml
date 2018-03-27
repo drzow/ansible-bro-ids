@@ -20,11 +20,15 @@
       apt_repository: repo='ppa:securityonion/stable' update_cache=yes
   when: use_securityonion_deb and (ansible_distribution_release == "precise" or ansible_distribution_release == "trusty")
 
-
 ## WARNING: The following packages cannot be authenticated! = force
 - name: Debian/Ubuntu | Install Bro and dependencies
   apt: name={{item}} state=present update_cache=yes cache_valid_time=3600 force=yes
   with_items: "{{ broids_packages + broids_packages_deps }}"
+
+# Some tools expect bro to be installed in /usr/local/bro but the debian/ubuntu packages
+# place it in /opt/bro, so we add a symlink
+- name: Debian/Ubuntu | Link /usr/local/bro to /opt/bro
+  file: src=/opt/bro path=/usr/local/bro state=link
 
 - block:
     - stat: path=/etc/init.d/bro-ids
