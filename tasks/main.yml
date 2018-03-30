@@ -33,11 +33,26 @@
   when: bro_force_source_build
 
 ## Extra configuration
+- name: Check if /etc/profile.d exists
+  stat:
+    path: /etc/profile.d
+  register: profiled_exists
+
+- name: Add BROPATH to /etc/profile.d
+  copy:
+    content: |
+      export BROPATH={{ bro_prefix }}
+      export PATH=$PATH:$BROPATH/bin
+    dest: /etc/profile.d/bro.sh
+    mode: 0755
+  when: profiled_exists.stat.isdir == True
+
 - name: Add BROPATH to /etc/profile
   lineinfile: 'dest=/etc/profile regexp="{{ item.regexp }}" line="{{ item.line }}" state=present create=yes'
   with_items:
     - { regexp: '^export BROPATH=', line: 'export BROPATH={{ bro_prefix }}' }
     - { regexp: '^export PATH=', line: 'export PATH=$PATH:$BROPATH/bin' }
+  when: profiled_exists.stat.isdir == False
 
 - name: ensure bro directories exist
   file: dest={{ item }} state=directory mode=0775 group={{ broids_group }}
