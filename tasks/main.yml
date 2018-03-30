@@ -18,18 +18,18 @@
     - python-pip
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
-- include: pyopenssl.yml
+- import_tasks: pyopenssl.yml
 
 - name: Debian-based | install bro
-  include: debian.yml
+  include_tasks: debian.yml
   when: not bro_force_source_build and (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu')
 
 - name: Redhat-based | install bro
-  include: redhat.yml
+  include_tasks: redhat.yml
   when: not bro_force_source_build and (ansible_os_family == "RedHat" or ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux')
 
 - name: install bro from source
-  include: source.yml
+  include_tasks: source.yml
   when: bro_force_source_build
 
 ## Extra configuration
@@ -119,7 +119,7 @@
   notify:
     - restart bro
 
-- include: pdns.yml
+- import_tasks: pdns.yml
 
 - name: create directory for extracted files
   file: dest="{{ item }}" state=directory mode=0755
@@ -127,9 +127,9 @@
     - "{{ bro_extractedfiles }}/http"
     - "{{ bro_extractedfiles }}/ftp"
 
-- include: bro-scripts.yml
+- import_tasks: bro-scripts.yml
 
-- include: critical-stack.yml
+- include_tasks: critical-stack.yml
   when: bro_cs_enable is defined and bro_cs_enable
 
 ## FIXME! idempotency
@@ -158,6 +158,6 @@
 # Test
 # curl http://localhost:8081/dns/www.youtube.com
 
-- include: aide-hids.yml
-- include: monit.yml
+- import_tasks: aide-hids.yml
+- import_tasks: monit.yml
 
