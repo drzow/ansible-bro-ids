@@ -9,7 +9,5 @@
 #  vars:
 #    - a:
   roles:
-#    - juju4.bro-ids
-    - juju4.maxmind
-    - juju4.ipsumdump
+    - juju4.bro-ids
 
