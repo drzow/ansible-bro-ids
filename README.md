@@ -18,6 +18,13 @@ It was tested on the following versions:
  * 2.0
  * 2.2
 
+### Ansible Roles
+ * juju4.maxmind
+ * juju4.ipsumdump
+ * juju4.redhat-epel
+If you installed the role with ansible-galaxy, these should have been
+installed autmatically, otherwise you may need to download them yourself.
+
 ### Operating systems
 
 Ubuntu 14.04, 16.04 and Centos7
@@ -56,7 +63,10 @@ bro_mode: alone
 #bro_nodes:
 #   - 10.0.0.11
 #   - 10.0.0.12
-#bro_nodes_if: eth0
+bro_nodes_if: eth0 # TODO: make sure this is used and other ways to set it
+
+## local disk logs limit in days
+broids_logexpire_interval: 90
 
 ## Only available for Ubuntu 12.04 (EOL Apr 2017), has pfring
 use_securityonion_deb: false
@@ -74,7 +84,41 @@ mysql_root_password: mysql_root_pass_to_change_or_get_lost
 mysql_old_root_password:
 mysql_pdns_user: pdns
 mysql_pdns_pass: pdns_pass_to_change_or_get_lost
+
+## MISP setup
+broids_misp_url: ''
+## it's advised to create a dedicated user with read-only access
+broids_misp_apikey: ''
+
+# Add the full path to intel files (besides those from MISP), as outlined in
+# http://blog.bro.org/2014/01/intelligence-data-and-bro_4980.html , to the
+# broids_intels array:
+broids_intels: []
+
+## install critical stack (need to register to get API key, https://intel.criticalstack.com/)
+bro_cs_enable: false
+bro_cs_apikey: ''
+bro_cs_proxy: ''
+#bro_cs_proxy: 'http://username:password@hostname:port'
+bro_cs_autorestart: false
+
+broids_vt_api_key: ''
 ```
+
+## Supporting software / integrations
+Besides the software that will be installed by the included roles (maxmind, 
+ipsumdump), the following packages will be installed in addition to Bro:
+ * [bro-pdns](https://github.com/JustinAzoff/bro-pdns) (Passive DNS)
+ * mysql (to store Passive DNS data)
+   * See mysql setup for passivedns above to configure these correctly
+ * [MISP2Bro](https://github.com/thnyheim/misp2bro.git) (Convert MISP IOCs to 
+   Bro Intel): See above to configure this
+ * A number of popular Bro scripts (see tasks/bro-scripts.yml for details)
+ * [JA3 Integration](https://www.splunk.com/blog/2017/12/18/configuring-ja3-with-bro-for-splunk.html)
+ * [Critical Stack Intel](https://intel.criticalstack.com/): See above to 
+   configure this
+ * [VirusTotal](https://www.virustotal.com/en/documentation/public-api/): See
+   above to configure this
 
 ## Continuous integration
 
