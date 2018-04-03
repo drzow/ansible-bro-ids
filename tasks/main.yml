@@ -64,8 +64,6 @@
     - "{{ broids_spool }}/misp2bro"
     - "/usr/share/bro/intel"
 
-# 1/2 fail (est) (worked this far)
-
 #- name: young-ssl bro script
 #  copy:
 #    src=young-ssl.bro dest={{ broids_site }}/young-ssl.bro mode=644
@@ -108,10 +106,7 @@
         - restart bro
   when: st.stat.exists
 
-# 5/8 fail
-- name: Stop here for debugging purposes
-  fail:
-    msg: "Stopping for debugging purposes"
+# 5/8 fail (worked)
 
 - name: configure bro maintenance script as scheduled task
   cron:
@@ -125,6 +120,11 @@
   template: src=node.cfg.j2 dest={{ broids_etc }}/node.cfg mode=0664 owner=root group={{ broids_group }}
   notify:
     - restart bro
+
+# 11/16 fail
+- name: Stop here for debugging purposes
+  fail:
+    msg: "Stopping for debugging purposes"
 
 - import_tasks: pdns.yml
 
