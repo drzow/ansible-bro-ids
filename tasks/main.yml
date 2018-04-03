@@ -106,8 +106,6 @@
         - restart bro
   when: st.stat.exists
 
-# 5/8 fail (worked)
-
 - name: configure bro maintenance script as scheduled task
   cron:
     name: "bro maintainance"
@@ -121,14 +119,8 @@
   notify:
     - restart bro
 
-# 11/16 fail
-- name: Stop here for debugging purposes
-  fail:
-    msg: "Stopping for debugging purposes"
-
+# Ubuntu 14 fails here:
 - import_tasks: pdns.yml
-
-# 3/4 fail (timed out)
 
 - name: create directory for extracted files
   file: dest="{{ item }}" state=directory mode=0755
