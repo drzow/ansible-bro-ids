@@ -64,6 +64,8 @@
     - "{{ broids_spool }}/misp2bro"
     - "/usr/share/bro/intel"
 
+# 1/2 fail (est) (worked this far)
+
 #- name: young-ssl bro script
 #  copy:
 #    src=young-ssl.bro dest={{ broids_site }}/young-ssl.bro mode=644
@@ -106,6 +108,11 @@
         - restart bro
   when: st.stat.exists
 
+# 5/8 fail
+- name: Stop here for debugging purposes
+  fail:
+    msg: "Stopping for debugging purposes"
+
 - name: configure bro maintenance script as scheduled task
   cron:
     name: "bro maintainance"
@@ -121,9 +128,7 @@
 
 - import_tasks: pdns.yml
 
-- name: Stop here for debugging purposes
-  fail:
-    msg: "Stopping for debugging purposes"
+# 3/4 fail (timed out)
 
 - name: create directory for extracted files
   file: dest="{{ item }}" state=directory mode=0755
