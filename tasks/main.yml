@@ -78,10 +78,6 @@
   notify:
     - restart bro
 
-- name: Stop here for debugging purposes
-  fail:
-    msg: "Stopping for debugging purposes"
-
 ## Note: file is created by broctl: install and {{ broids_spool }}/broctl-config.sh -> {{ bro_prefix }}/share/broctl/scripts/broctl-config.sh
 - stat: path={{ broids_spool }}/broctl-config.sh
   register: st
@@ -124,6 +120,10 @@
     - restart bro
 
 - import_tasks: pdns.yml
+
+- name: Stop here for debugging purposes
+  fail:
+    msg: "Stopping for debugging purposes"
 
 - name: create directory for extracted files
   file: dest="{{ item }}" state=directory mode=0755
