@@ -11,8 +11,8 @@
 
 - name: Check mysql version
   command: mysql -V
-  register: mysqlver
-  debug: mysqlver
+#  register: mysqlver
+#  debug: mysqlver
 # Stop for debugging purposes
 - name: Stop here for debugging purposes
   fail:
