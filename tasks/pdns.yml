@@ -9,6 +9,15 @@
 #    - mysql_install_db
 #    - mysql_secure_installation    ## interactive
 
+- name: Check mysql version
+  command: mysql -V
+  register: mysqlver
+  debug: mysqlver
+# Stop for debugging purposes
+- name: Stop here for debugging purposes
+  fail:
+    msg: "Stopping for debugging purposes"
+# This seems to hang Ubuntu 14
 - name: check that mysql is running
   service: "name={{ mysql_svc }} state=started"
 #- stat: path=/root/.my.cnf
@@ -24,10 +33,6 @@
 #  ignore_errors: true
 #- debug: var=myconf.stdout_lines
 
-# Stop 1/8 way through for debugging purposes
-- name: Stop here for debugging purposes
-  fail:
-    msg: "Stopping for debugging purposes"
 - name: Set mysql root user password
   mysql_user: name=root
               host="{{ item }}"
